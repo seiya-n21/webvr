@@ -14,30 +14,8 @@
   var geometry = new THREE.SphereGeometry( 5, 60, 40 );
     geometry.scale( - 1, 1, 1 );
 
-/*
-    //動画
-  var video = document.createElement( 'video' );
-  video.width = 640;
-  video.height = 360;
-  video.autoplay = true; // 検証用にautoplay停止
-  //video.autoplay = false;
-  video.loop = true;
-  video.src = "test.MP4";
-
-
-  var texture = new THREE.VideoTexture( video );
-  texture.minFilter = THREE.LinearFilter;
-
-  var material   = new THREE.MeshBasicMaterial( { map : texture } );
-*/
-    //静止画
-    var material = new THREE.MeshBasicMaterial( {
-       map: THREE.ImageUtils.loadTexture( 'img/img1_large.jpg' )
-    } );
-    
-    sphere = new THREE.Mesh( geometry, material );
-
-    scene.add( sphere );
+  //静止画
+  imgPlay('img/img3_large.jpg');
 
   //camera
 
@@ -68,9 +46,14 @@
     window.addEventListener( 'resize', onWindowResize, false );
     renderer.render(scene,camera);
 
-    button = document.getElementsByClassName("play");
+    button = document.getElementsByClassName("imgPlay");
     for(var i = 0; i < button.length; i++){
-      button[i].addEventListener( 'click', imgPlay, false );
+      button[i].addEventListener( 'click', imgSelect, false );
+    }
+
+    button = document.getElementsByClassName("videoPlay");
+    for(var i = 0; i < button.length; i++){
+      button[i].addEventListener( 'click', videoSelect, false );
     }
     controls.update();
   }
@@ -82,11 +65,10 @@
     }
 
   function vidplay() {
-    imgPlay();
-/*
-       if (video.paused) {
+    //imgPlay();
 
-          //video.play();
+       if (video.paused) {
+          video.play();
           button.textContent = "||";
           button.style.backgroundColor = "#F26964";
        } else {
@@ -94,22 +76,55 @@
           button.textContent = ">";
           button.style.backgroundColor = "#1253A4";
        }
-       */
     }
 
-  function imgPlay(){
-    var imgPath = ""
+  function videoSelect(){
+    var path = ""
     if(this.textContent == "1"){
-      imgPath = 'img/img1_large.jpg';
+      path = 'img/SAM_101_0021.mp4';
     }
     else if(this.textContent == "2"){
-      imgPath = 'img/img2_large.jpg';
+      path = 'img/img2_large.jpg';
     }
     else{
-      imgPath = 'img/img3_large.jpg';
+      path = 'img/img3_large.jpg';
     }
+    videoPlay(path);
+  }
+
+  function imgSelect(){
+    var path = ""
+    if(this.textContent == "1"){
+      path = 'img/SAM_101_0099.jpg';
+    }
+    else if(this.textContent == "2"){
+      path = 'img/img2_large.jpg';
+    }
+    else{
+      path = 'img/img3_large.jpg';
+    }
+    imgPlay(path);
+  }
+
+  function videoPlay(path){
+    var video = document.createElement( 'video' );
+    video.width = 640;
+    video.height = 360;
+    video.autoplay = true;
+    video.loop = true;
+    video.src = path;
+
+    var texture = new THREE.VideoTexture( video );
+    texture.minFilter = THREE.LinearFilter;
+
+    var material   = new THREE.MeshBasicMaterial( { map : texture } );
+    sphere = new THREE.Mesh( geometry, material );
+    scene.add( sphere );
+  }
+
+  function imgPlay(path){
     var material = new THREE.MeshBasicMaterial( {
-       map: THREE.ImageUtils.loadTexture( imgPath )
+       map: THREE.ImageUtils.loadTexture( path )
     } );
     sphere = new THREE.Mesh( geometry, material );
     scene.add( sphere );
